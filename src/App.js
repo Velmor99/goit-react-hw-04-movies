@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, lazy, Suspense, Fragment } from 'react';
+import { Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import NavBar from './components/Navbar';
+import Home from './pages/Home';
+const asyncMovies = lazy(() => import('./pages/Movies' /* webpackChunkName: "new_movies" */));
+const asyncOneMovie = lazy(() => import('./pages/OneMovie' /* webpackChunkName: "new_oneMovie" */));
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+	render() {
+		return (
+			<Fragment>
+				<NavBar />
+				<Suspense fallback={<h1>Loading...</h1>}>
+					<Layout>
+						<Route exact path="/" component={Home} />
+						<Route exact path="/movies" component={asyncMovies} />
+						<Route path="/movies/:movieId" component={asyncOneMovie} />
+					</Layout>
+				</Suspense>
+			</Fragment>
+		);
+	}
 }
-
-export default App;
