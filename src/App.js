@@ -1,6 +1,5 @@
 import React, { Component, lazy, Suspense, Fragment } from 'react';
 import { Route } from 'react-router-dom';
-import Layout from './components/Layout';
 import NavBar from './components/Navbar';
 import Home from './pages/Home';
 const asyncMovies = lazy(() => import('./pages/Movies' /* webpackChunkName: "new_movies" */));
@@ -12,11 +11,9 @@ export default class App extends Component {
 			<Fragment>
 				<NavBar />
 				<Suspense fallback={<h1>Loading...</h1>}>
-					<Layout>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/movies" component={asyncMovies} />
 						<Route path="/movies/:movieId" component={asyncOneMovie} />
-					</Layout>
 				</Suspense>
 			</Fragment>
 		);

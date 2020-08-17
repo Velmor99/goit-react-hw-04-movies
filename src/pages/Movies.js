@@ -2,10 +2,40 @@ import React, { Component, Fragment } from 'react';
 import queryString from 'query-string';
 import SearchBar from '../components/SearchBar';
 import { Link } from 'react-router-dom';
+import fetchAPI from '../services/services'
 
 export default class Movies extends Component {
 	state = {
 		movies: []
+	};
+
+	componentDidMount() {
+		const oldMovies = localStorage.getItem('movies')
+		if(oldMovies) {
+			
+			this.setState({
+                movies: JSON.parse(oldMovies)
+			})
+			
+		}
+	}
+
+	
+	componentDidUpdate(prevProps, prevState) {
+		const { query: prevQuery } = queryString.parse(prevProps.location.search);
+		const { query: nextQuery } = queryString.parse(this.props.location.search);
+
+		if (prevQuery !== nextQuery) {
+			fetchAPI.fetchForMovies(nextQuery)
+				.then((data) =>
+					this.setState({
+						movies: data.results
+					})
+				)
+				.catch(error => console.log(error))
+		}
+
+		localStorage.setItem('movies', JSON.stringify(this.state.movies))
 	};
 
 	handleSubmit = (query) => {
@@ -15,22 +45,8 @@ export default class Movies extends Component {
 		});
 	};
 
-	componentDidUpdate(prevProps, prevState) {
-		const { query: prevQuery } = queryString.parse(prevProps.location.search);
-		const { query: nextQuery } = queryString.parse(this.props.location.search);
 
-		if (prevQuery !== nextQuery) {
-			fetch(
-				`https://api.themoviedb.org/3/search/movie?api_key=37e6723ba2b6d898417f004928a3c09b&language=en-US&query=${nextQuery}&page=1&include_adult=false`
-			)
-				.then((response) => response.json())
-				.then((data) =>
-					this.setState({
-						movies: data.results
-					})
-				);
-		}
-	}
+
 
 	render() {
 		const { movies } = this.state;

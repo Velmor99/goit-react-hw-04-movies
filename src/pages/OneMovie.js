@@ -1,5 +1,6 @@
 import React, { Component, Suspense, lazy, Fragment } from 'react';
 import { Route, Link } from 'react-router-dom';
+import fetchAPI from '../services/services'
 const asyncCast = lazy(() => import('../components/Cast' /* webpackChunkName: "movie_cast" */));
 const asyncRevievs = lazy(() => import('../components/Revievs' /* webpackChunkName: "movie_revievs" */));
 
@@ -9,16 +10,18 @@ export default class OneMovie extends Component {
 	};
 
 	componentDidMount() {
-		fetch(
-			`https://api.themoviedb.org/3/movie/${this.props.match.params
-				.movieId}?api_key=37e6723ba2b6d898417f004928a3c09b&language=en-US`
-		)
-			.then((response) => response.json())
+		fetchAPI.fetchForOneMovie(this.props.match.params.movieId)
 			.then((data) =>
 				this.setState({
 					movie: data
 				})
-			);
+			)
+			.catch(error => console.log(error))
+	};
+
+	goBack = () => {
+			this.props.history.goBack() 
+		
 	}
 
 	render() {
@@ -26,6 +29,7 @@ export default class OneMovie extends Component {
 			<Fragment>
 				{this.state.movie && (
 					<Fragment>
+						<button type="button" onClick={this.goBack}>Go back</button>
 						<div>
 							<img src={`https://image.tmdb.org/t/p/w400${this.state.movie.poster_path}`} alt="img" />
 							<div>

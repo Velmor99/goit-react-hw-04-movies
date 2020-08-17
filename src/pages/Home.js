@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import fetchAPI from '../services/services'
 
 export default class Home extends Component {
 	state = {
@@ -7,13 +8,13 @@ export default class Home extends Component {
 	};
 
 	componentDidMount() {
-		fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=37e6723ba2b6d898417f004928a3c09b')
-			.then((response) => response.json())
+		fetchAPI.fetchForHome()
 			.then((data) =>
 				this.setState({
 					movies: data.results
 				})
-			);
+			)
+			.catch(error => console.log(error))
 	}
 
 	render() {

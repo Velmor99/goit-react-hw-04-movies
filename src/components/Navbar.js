@@ -7,8 +7,7 @@ const NavBar = () => {
 		<header className={styles.header}>
 			<ul className={styles.navList}>
 				<li>
-					<NavLink
-						style={{
+					<NavLink style={{
 							textDecoration: 'none',
 							display: 'block',
 							color: '#fff',
@@ -30,8 +29,7 @@ const NavBar = () => {
 				</li>
 
 				<li>
-					<NavLink
-						style={{
+					<NavLink style={{
 							textDecoration: 'none',
 							display: 'block',
 							color: '#fff',
