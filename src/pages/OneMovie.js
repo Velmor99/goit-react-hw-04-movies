@@ -19,8 +19,12 @@ export default class OneMovie extends Component {
 			.catch(error => console.log(error))
 	};
 
-	goBack = () => {
-			this.props.history.goBack() 
+	handleGoBack = () => {
+			if(this.props.location.state && this.props.location.state.from) {
+				this.props.history.push(this.props.location.state.from)
+			} else {
+				this.props.history.push("/movies")
+			}
 		
 	}
 
@@ -29,7 +33,7 @@ export default class OneMovie extends Component {
 			<Fragment>
 				{this.state.movie && (
 					<Fragment>
-						<button type="button" onClick={this.goBack}>Go back</button>
+						<button type="button" onClick={this.handleGoBack}>Go back</button>
 						<div>
 							<img src={`https://image.tmdb.org/t/p/w400${this.state.movie.poster_path}`} alt="img" />
 							<div>

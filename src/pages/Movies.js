@@ -10,14 +10,17 @@ export default class Movies extends Component {
 	};
 
 	componentDidMount() {
-		const oldMovies = localStorage.getItem('movies')
-		if(oldMovies) {
-			
+		const { query: nextQuery } = queryString.parse(this.props.location.search);
+		console.log(nextQuery)
+	 if(nextQuery) {
+		fetchAPI.fetchForMovies(nextQuery)
+		.then((data) =>
 			this.setState({
-                movies: JSON.parse(oldMovies)
+				movies: data.results
 			})
-			
-		}
+		)
+		.catch(error => console.log(error))
+	 }
 	}
 
 	
@@ -35,7 +38,6 @@ export default class Movies extends Component {
 				.catch(error => console.log(error))
 		}
 
-		localStorage.setItem('movies', JSON.stringify(this.state.movies))
 	};
 
 	handleSubmit = (query) => {
@@ -58,7 +60,10 @@ export default class Movies extends Component {
 						{movies.map((item) => {
 							return (
 								<li key={item.id}>
-									<Link to={`${this.props.match.url}/${item.id}`}>{item.title}</Link>
+									<Link to={{
+										pathname: `${this.props.match.url}/${item.id}`,
+										state: {from: this.props.location}
+									}}>{item.title}</Link>
 								</li>
 							);
 						})}
@@ -68,3 +73,4 @@ export default class Movies extends Component {
 		);
 	}
 }
+
